@@ -1,0 +1,2 @@
+# Flights
+Build an end-to-end project to predict flight ticket prices based on multiple factors such as departure time, source, destination, and airline type. Use the provided dataset to process, clean, and perform feature engineering. Train a regression model to predict flight prices and deploy the model in a Streamlit application. The app should allow users to input filters (route, time, and date) and get a predicted price for their flight.
