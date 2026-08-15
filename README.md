@@ -150,7 +150,7 @@ The models are evaluated on a held-out test set using metrics appropriate to eac
 
 The main dashboard provides an overview of the flight dataset, including flight volume, number of airlines, routes, and average fare.
 
-<img src="assets/home-dashboard.png" alt="SkyPredict AI Dashboard" width="900">
+<img src="assets/home-dashboard1.png" alt="SkyPredict AI Dashboard" width="900">
 
 ---
 
