@@ -1,5 +1,3 @@
-<img width="2833" height="1521" alt="Screenshot 2026-08-15 210546" src="https://github.com/user-attachments/assets/6b01f992-4086-4f50-bfad-f85f6cf787ea" /># ✈️ SkyPredict AI — Flight Price & Customer Satisfaction Prediction
-
 An end-to-end Machine Learning application built with **Python, Scikit-learn, Streamlit, Plotly, and MLflow** to predict flight ticket prices and passenger satisfaction from historical airline data.
 
 The project combines **regression and classification** in a single interactive application and demonstrates the complete ML workflow from data preprocessing and feature engineering to model training, evaluation, experiment tracking, and deployment.
@@ -200,13 +198,6 @@ Flights/
 
 ## 🖥️ Application Screenshots
 
-<p align="center"> <img src="<img width="2848" height="1537" alt="home-dashboard1" src="https://github.com/user-attachments/assets/3af5ac95-5fb2-4226-9587-d1c7bf1984a8" />" width="900"> </p>
-
-<p align="center"> <img src="<img width="2819" height="1498" alt="Screenshot 2026-08-15 210441" src="https://github.com/user-attachments/assets/0561259a-cf8c-4165-ae1a-a04d4914ddc6" />" width="900"> </p>
-
-<p align="center"> <img src="<img width="2823" height="1406" alt="Screenshot 2026-08-15 210509" src="https://github.com/user-attachments/assets/2d755212-ee63-4414-9928-020f4f89b260" /> " width="900"> </p>
-
-<p align="center"> <img src="<img width="2833" height="1521" alt="Screenshot 2026-08-15 210546" src="https://github.com/user-attachments/assets/a7242aef-13e6-4fe4-9db7-dde787729680" /> " width="900"> </p>
 
 ## ⚙️ Installation
 
@@ -256,10 +247,14 @@ The application will open in your browser.
 
 The main dashboard provides an overview of the flight dataset, including flight volume, airlines, routes, and average fare.
 
-<p align="center">
-  <img src="<img width="2848" height="1537" alt="home-dashboard1" src="https://github.com/user-attachments/assets/32a28a37-9e85-4393-8610-571b7ab14dbd" />
+<img width="2848" height="1537" alt="home-dashboard1" src="https://github.com/user-attachments/assets/32a28a37-9e85-4393-8610-571b7ab14dbd" />
 " alt="SkyPredict AI Dashboard" width="900">
 </p>
+
+
+
+<img width="2833" height="1521" alt="Screenshot 2026-08-15 210546" src="https://github.com/user-attachments/assets/6b01f992-4086-4f50-bfad-f85f6cf787ea" /># ✈️ SkyPredict AI — Flight Price & Customer Satisfaction Prediction
+
 
 ---
 
