@@ -784,7 +784,37 @@ Users can enter passenger information, flight details, service ratings, and dela
 
 ---
 
+### 📊 Interactive Data Visualizations
 
+The application includes interactive charts to help users explore flight and passenger data and better understand the patterns behind the machine learning predictions.
+
+<img width="2815" height="1425" alt="Screenshot 2026-08-15 224757" src="<img width="2185" height="725" alt="Screenshot 2026-08-15 225543" src="https://github.com/user-attachments/assets/e87c9075-c6d3-4125-aabd-4c4b73038db4" />
+" />
+" />
+
+---
+
+### 📊 Customer Satisfaction Analytics Dashboard
+
+The **Dashboard** section provides interactive visualizations for exploring passenger demographics, travel characteristics, and customer satisfaction patterns.
+
+#### 👥 Age Distribution by Satisfaction
+
+This histogram compares the age distribution of passengers across the **Satisfied** and **Neutral or Dissatisfied** categories, helping identify age-related patterns in passenger satisfaction.
+
+<img width="2193" height="689" alt="agedistribution" src="https://github.com/user-attachments/assets/a423595a-5742-4235-9ccd-9211be0108b9" />
+
+#### ✈️ Flight Distance by Travel Class
+
+The box plot compares **flight distance** across **Eco Plus, Business, and Eco** travel classes, segmented by customer satisfaction. It provides a clear view of differences in distance distributions, variability, and potential outliers across travel classes.
+
+<img width="2177" height="691" alt="flightdist" src="https://github.com/user-attachments/assets/287abf1b-7f3b-4f85-a7d2-b9e5a04dcb9b" />
+
+**Example insight:** The visualizations show how passenger satisfaction varies across different age groups and how flight-distance patterns differ between travel classes and satisfaction categories.
+
+These interactive charts are designed to complement the prediction models by providing **exploratory data analysis (EDA)** and visual context behind the customer satisfaction predictions.
+
+---
 
 # 📜 License
 
