@@ -1,4 +1,4 @@
-# ✈️ SkyPredict AI — Flight Price & Customer Satisfaction Prediction
+<img width="2833" height="1521" alt="Screenshot 2026-08-15 210546" src="https://github.com/user-attachments/assets/6b01f992-4086-4f50-bfad-f85f6cf787ea" /># ✈️ SkyPredict AI — Flight Price & Customer Satisfaction Prediction
 
 An end-to-end Machine Learning application built with **Python, Scikit-learn, Streamlit, Plotly, and MLflow** to predict flight ticket prices and passenger satisfaction from historical airline data.
 
@@ -248,6 +248,58 @@ streamlit run app.py
 The application will open in your browser.
 
 ---
+
+
+## 🖥️ Application Screenshots
+
+### 🏠 SkyPredict AI Dashboard
+
+The main dashboard provides an overview of the flight dataset, including flight volume, airlines, routes, and average fare.
+
+<p align="center">
+  <img src="<img width="2848" height="1537" alt="home-dashboard1" src="https://github.com/user-attachments/assets/32a28a37-9e85-4393-8610-571b7ab14dbd" />
+" alt="SkyPredict AI Dashboard" width="900">
+</p>
+
+---
+
+### ✈️ Flight Search & Route Analysis
+
+Users can select the origin, destination, journey date, and travel class to explore matching historical flight patterns.
+
+<p align="center">
+  <img src="<img width="2819" height="1498" alt="Screenshot 2026-08-15 210441" src="https://github.com/user-attachments/assets/de555f45-ea53-439e-b827-1cba96551ba2" />
+" alt="Flight Search and Route Analysis" width="900">
+</p>
+
+---
+
+### 💰 AI Flight Price Prediction
+
+The application generates an estimated ticket price and provides contextual analysis against the historical route average.
+
+<p align="center">
+  <img src="<img width="2823" height="1406" alt="Screenshot 2026-08-15 210509" src="https://github.com/user-attachments/assets/981451a2-de1f-49be-9dfd-da31b63daf2e" />
+" alt="AI Flight Price Prediction" width="900">
+</p>
+
+**Example:** For the selected Bangalore → Delhi route, the model generated an estimated fare of **₹4,105**, compared with a historical route average of **₹5,144**.
+
+> This is a machine-learning estimate based on historical data and is not a live airline fare.
+
+---
+
+### 😊 Customer Satisfaction Prediction
+
+Users can enter passenger information, flight details, service ratings, and delays to generate a customer satisfaction prediction.
+
+<p align="center">
+  <img src="<img width="2833" height="1521" alt="Screenshot 2026-08-15 210546" src="https://github.com/user-attachments/assets/3980714a-aabc-4820-a06c-c438e89c5296" />
+" alt="Customer Satisfaction Prediction" width="900">
+</p>
+
+**Example:** The displayed prediction classified the passenger as **Satisfied** with **72.0% confidence**.
+
 
 ## 🧠 Train the Models
 
