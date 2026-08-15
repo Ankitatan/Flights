@@ -798,6 +798,18 @@ The application includes interactive charts to help users explore flight and pas
 
 The **Dashboard** section provides interactive visualizations for exploring passenger demographics, travel characteristics, and customer satisfaction patterns.
 
+### 📊 Interactive Customer Analytics Dashboard
+
+The application includes an interactive analytics dashboard for exploring relationships between passenger characteristics, travel information, and customer satisfaction.
+
+The dashboard currently visualizes:
+
+* 👥 **Age Distribution by Satisfaction** — compares passenger age distributions between satisfied and neutral/dissatisfied customers.
+* ✈️ **Flight Distance by Travel Class** — compares flight-distance distributions across Eco Plus, Business, and Eco classes, segmented by satisfaction.
+* 📈 **Interactive Plotly Visualizations** — enables users to explore distributions, comparisons, and outliers through interactive charts.
+
+**Example insight:** The dashboard provides visual context for understanding customer satisfaction patterns across passenger age, travel class, and flight distance, complementing the machine learning prediction results.
+
 #### 👥 Age Distribution by Satisfaction
 
 This histogram compares the age distribution of passengers across the **Satisfied** and **Neutral or Dissatisfied** categories, helping identify age-related patterns in passenger satisfaction.
