@@ -150,7 +150,7 @@ The models are evaluated on a held-out test set using metrics appropriate to eac
 
 The main dashboard provides an overview of the flight dataset, including flight volume, number of airlines, routes, and average fare.
 
-<img src="assets/home-dashboard1.png" alt="SkyPredict AI Dashboard" width="900">
+<img width="2848" height="1537" alt="home-dashboard1" src="https://github.com/user-attachments/assets/8a46f452-00b3-4fcc-94a0-f96333193f07" />"
 
 ---
 
@@ -158,7 +158,7 @@ The main dashboard provides an overview of the flight dataset, including flight 
 
 Users can select the origin, destination, journey date, and travel class to explore matching historical flight patterns.
 
-<img src="assets/flight-search.png" alt="Flight Search and Route Analysis" width="900">
+<img width="2819" height="1498" alt="fligh-search" src="https://github.com/user-attachments/assets/03b5b4d0-854c-4cb1-9afc-8e2d85e9bc3a" />" 
 
 ---
 
@@ -166,7 +166,7 @@ Users can select the origin, destination, journey date, and travel class to expl
 
 The application generates an estimated ticket price and provides contextual analysis against the historical route average.
 
-<img src="assets/price-prediction.png" alt="AI Flight Price Prediction" width="900">
+<img width="2823" height="1406" alt="price-prediction" src="https://github.com/user-attachments/assets/96aec2ab-dd39-4e14-9804-1d4fdf7428ad" />
 
 **Example:** For the selected Bangalore → Delhi route, the application generated an estimated fare of **₹4,105**, compared with a historical route average of **₹5,144**.
 
@@ -178,7 +178,7 @@ The application generates an estimated ticket price and provides contextual anal
 
 Users can enter passenger information, flight details, service ratings, and delay information to generate a customer satisfaction prediction.
 
-<img src="assets/customer-satisfaction.png" alt="Customer Satisfaction Prediction" width="900">
+<img width="2833" height="1521" alt="customer-satisfaction" src="https://github.com/user-attachments/assets/5a91c71d-bdb0-4cf0-8c82-db0b73ca6c69" />
 
 **Example:** The displayed prediction classified the passenger as **Satisfied** with **72.0% confidence**.
 
