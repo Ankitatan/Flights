@@ -33,7 +33,7 @@ SkyPredict AI is designed as an end-to-end machine learning solution that demons
 
 The main dashboard provides access to the flight price prediction and customer satisfaction modules.
 
-![SkyPredict AI Dashboard](assets/screenshots/skypredict-dashboard.png)
+<img width="2848" height="1537" alt="home-dashboard1" src="https://github.com/user-attachments/assets/5edb8a64-696c-4d5e-8bc1-538485e59594" />
 
 ---
 
@@ -51,7 +51,7 @@ Users can enter flight-related information such as:
 
 The trained regression model generates an **estimated flight fare**.
 
-![Flight Price Prediction](assets/screenshots/flight-price-prediction.png)
+<img width="2823" height="1406" alt="price-prediction" src="https://github.com/user-attachments/assets/14b6bef7-2e85-4591-b2f5-f49119afff44" />
 
 ---
 
@@ -61,7 +61,7 @@ The application displays the predicted fare based on the selected flight charact
 
 > **Important:** The predicted fare is a machine-learning estimate based on historical training data. It is **not a live airline booking price**.
 
-![Estimated Flight Fare](assets/screenshots/estimated-flight-fare.png)
+<img width="2819" height="1498" alt="fligh-search" src="https://github.com/user-attachments/assets/32e78a99-0b48-45dd-92f5-cb76aceaba4e" />
 
 ---
 
@@ -81,7 +81,7 @@ Relevant inputs include:
 * Departure delay
 * Arrival delay
 
-![Customer Satisfaction Prediction](assets/screenshots/customer-satisfaction.png)
+<img width="2833" height="1521" alt="customer-satisfaction" src="https://github.com/user-attachments/assets/34cf35c2-2e7a-4c70-b6f7-7bcbb5c536f7" />
 
 ---
 
@@ -89,7 +89,7 @@ Relevant inputs include:
 
 The classification model returns the predicted customer satisfaction category and, when supported by the trained model, prediction confidence.
 
-![Customer Satisfaction Result](assets/screenshots/customer-satisfaction-result.png)
+<img width="2833" height="1521" alt="customer-satisfaction" src="https://github.com/user-attachments/assets/77f82e12-33ea-4992-856e-a53e1108ef90" />
 
 ---
 
