@@ -150,9 +150,7 @@ The models are evaluated on a held-out test set using metrics appropriate to eac
 
 The main dashboard provides an overview of the flight dataset, including flight volume, number of airlines, routes, and average fare.
 
-<p align="center">
-  <img src="assets/home-dashboard.png" alt="SkyPredict AI Dashboard" width="900">
-</p>
+<img src="assets/home-dashboard.png" alt="SkyPredict AI Dashboard" width="900">
 
 ---
 
@@ -160,9 +158,7 @@ The main dashboard provides an overview of the flight dataset, including flight 
 
 Users can select the origin, destination, journey date, and travel class to explore matching historical flight patterns.
 
-<p align="center">
-  <img src="assets/flight-search.png" alt="Flight Search and Route Analysis" width="900">
-</p>
+<img src="assets/flight-search.png" alt="Flight Search and Route Analysis" width="900">
 
 ---
 
@@ -170,9 +166,7 @@ Users can select the origin, destination, journey date, and travel class to expl
 
 The application generates an estimated ticket price and provides contextual analysis against the historical route average.
 
-<p align="center">
-  <img src="assets/price-prediction.png" alt="AI Flight Price Prediction" width="900">
-</p>
+<img src="assets/price-prediction.png" alt="AI Flight Price Prediction" width="900">
 
 **Example:** For the selected Bangalore → Delhi route, the application generated an estimated fare of **₹4,105**, compared with a historical route average of **₹5,144**.
 
@@ -184,9 +178,7 @@ The application generates an estimated ticket price and provides contextual anal
 
 Users can enter passenger information, flight details, service ratings, and delay information to generate a customer satisfaction prediction.
 
-<p align="center">
-  <img src="assets/customer-satisfaction.png" alt="Customer Satisfaction Prediction" width="900">
-</p>
+<img src="assets/customer-satisfaction.png" alt="Customer Satisfaction Prediction" width="900">
 
 **Example:** The displayed prediction classified the passenger as **Satisfied** with **72.0% confidence**.
 
