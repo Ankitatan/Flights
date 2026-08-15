@@ -1,14 +1,18 @@
-An end-to-end Machine Learning application built with **Python, Scikit-learn, Streamlit, Plotly, and MLflow** to predict flight ticket prices and passenger satisfaction from historical airline data.
+# ✈️ SkyPredict AI — Flight Price & Customer Satisfaction Prediction
 
-The project combines **regression and classification** in a single interactive application and demonstrates the complete ML workflow from data preprocessing and feature engineering to model training, evaluation, experiment tracking, and deployment.
+An end-to-end Machine Learning application built with **Python, Scikit-learn, Streamlit, Plotly, and MLflow** to predict flight ticket prices and passenger satisfaction using historical airline data.
+
+The project combines **regression and classification** in an interactive application and demonstrates an end-to-end machine learning workflow covering data preprocessing, feature engineering, model training, evaluation, experiment tracking, and deployment.
 
 ---
 
 ## 🎯 Project Overview
 
-### 1. Flight Price Prediction — Regression
+SkyPredict AI contains two machine learning solutions:
 
-Predicts estimated flight fares based on itinerary and flight characteristics such as:
+### ✈️ 1. Flight Price Prediction — Regression
+
+Predicts estimated flight fares using flight characteristics such as:
 
 * Airline
 * Source
@@ -18,12 +22,13 @@ Predicts estimated flight fares based on itinerary and flight characteristics su
 * Flight duration
 * Number of stops
 
-### 2. Customer Satisfaction Prediction — Classification
+### 😊 2. Customer Satisfaction Prediction — Classification
 
-Predicts whether a passenger is likely to be satisfied based on:
+Predicts whether a passenger is likely to be satisfied using passenger and flight-related information such as:
 
-* Passenger demographics
+* Gender
 * Customer type
+* Age
 * Type of travel
 * Travel class
 * Flight distance
@@ -35,13 +40,15 @@ Predicts whether a passenger is likely to be satisfied based on:
 
 ## 💼 Business Problem
 
-Flight prices vary significantly depending on airline, route, travel timing, duration, and number of stops. Similarly, passenger satisfaction depends on multiple service and travel-related factors.
+Flight prices vary significantly depending on airline, route, travel timing, duration, and number of stops. Passenger satisfaction is also influenced by multiple service and travel-related factors.
 
-This project uses historical data and machine learning to:
+SkyPredict AI uses historical data and machine learning to:
 
 * Estimate expected flight fares
-* Identify factors associated with passenger satisfaction
-* Provide an interactive prediction interface
+* Analyze historical flight patterns
+* Compare predicted fares with route-level historical averages
+* Predict passenger satisfaction
+* Provide interpretable prediction results through an interactive dashboard
 * Demonstrate how predictive analytics can support travel-related decision-making
 
 > **Important:** Flight fare predictions are estimates generated from historical data. They are not live airline prices, booking quotes, or real-time inventory.
@@ -87,90 +94,233 @@ MLflow Experiment Tracking
    ↓
 Model Serialization
    ↓
-Streamlit Deployment
+Streamlit Application
 ```
 
 ---
 
-## 📊 Model Evaluation
+## 📊 Model Performance & Results
 
-### Flight Price Prediction
+The models are evaluated on a held-out test set using metrics appropriate to each prediction task.
 
-The regression model is evaluated using:
+### ✈️ Flight Price Prediction
 
-* **RMSE (Root Mean Squared Error)**
-* **R² Score**
+**Algorithm:** Random Forest Regressor
+**Test Split:** 80% Training / 20% Testing
 
-### Customer Satisfaction Prediction
+| Metric   |                  Result |
+| -------- | ----------------------: |
+| RMSE     | **₹[ADD ACTUAL VALUE]** |
+| R² Score |  **[ADD ACTUAL VALUE]** |
 
-The classification model is evaluated using:
+**RMSE** measures the typical magnitude of prediction error in the same unit as the target variable.
 
-* **Accuracy**
-* **Weighted F1-Score**
+**R² Score** measures the proportion of variance in flight prices explained by the model.
 
-### Results
+### 😊 Customer Satisfaction Prediction
 
-> Add the actual results from your latest model run here. Do not use estimated values.
+**Algorithm:** Random Forest Classifier
+**Test Split:** 80% Training / 20% Testing
 
-| Model                 | Algorithm                | Metric      |               Result |
-| --------------------- | ------------------------ | ----------- | -------------------: |
-| Flight Price          | Random Forest Regressor  | RMSE        | **Add actual value** |
-| Flight Price          | Random Forest Regressor  | R²          | **Add actual value** |
-| Customer Satisfaction | Random Forest Classifier | Accuracy    | **Add actual value** |
-| Customer Satisfaction | Random Forest Classifier | Weighted F1 | **Add actual value** |
+| Metric            |                  Result |
+| ----------------- | ----------------------: |
+| Accuracy          | **[ADD ACTUAL VALUE]%** |
+| Weighted F1-Score |  **[ADD ACTUAL VALUE]** |
+
+**Accuracy** measures the proportion of correctly classified passengers.
+
+**Weighted F1-Score** balances precision and recall while accounting for the distribution of the classes.
+
+### 📈 Model Summary
+
+| Prediction Task       | Algorithm                | Metric      |       Result |
+| --------------------- | ------------------------ | ----------- | -----------: |
+| Flight Price          | Random Forest Regressor  | RMSE        | **₹[VALUE]** |
+| Flight Price          | Random Forest Regressor  | R²          |  **[VALUE]** |
+| Customer Satisfaction | Random Forest Classifier | Accuracy    | **[VALUE]%** |
+| Customer Satisfaction | Random Forest Classifier | Weighted F1 |  **[VALUE]** |
+
+> **Note:** Results should reflect the latest execution of `train_models.py` using the project's cleaned datasets.
 
 ---
 
-## 🖥️ Application
+## 🖥️ Application Screenshots
 
-The Streamlit application provides an interactive interface for both prediction tasks.
+### 🏠 SkyPredict AI Dashboard
 
-### Flight Price Prediction
+The main dashboard provides an overview of the flight dataset, including flight volume, number of airlines, routes, and average fare.
 
-Users can enter:
+<p align="center">
+  <img src="assets/home-dashboard.png" alt="SkyPredict AI Dashboard" width="900">
+</p>
+
+---
+
+### ✈️ Flight Search & Route Analysis
+
+Users can select the origin, destination, journey date, and travel class to explore matching historical flight patterns.
+
+<p align="center">
+  <img src="assets/flight-search.png" alt="Flight Search and Route Analysis" width="900">
+</p>
+
+---
+
+### 💰 AI Flight Price Prediction
+
+The application generates an estimated ticket price and provides contextual analysis against the historical route average.
+
+<p align="center">
+  <img src="assets/price-prediction.png" alt="AI Flight Price Prediction" width="900">
+</p>
+
+**Example:** For the selected Bangalore → Delhi route, the application generated an estimated fare of **₹4,105**, compared with a historical route average of **₹5,144**.
+
+> This is a machine-learning estimate based on historical data and is not a live airline fare.
+
+---
+
+### 😊 Customer Satisfaction Prediction
+
+Users can enter passenger information, flight details, service ratings, and delay information to generate a customer satisfaction prediction.
+
+<p align="center">
+  <img src="assets/customer-satisfaction.png" alt="Customer Satisfaction Prediction" width="900">
+</p>
+
+**Example:** The displayed prediction classified the passenger as **Satisfied** with **72.0% confidence**.
+
+---
+
+## ✈️ Flight Price Prediction
+
+The application allows users to select:
+
+* Source
+* Destination
+* Journey date
+* Airline
+* Departure time
+* Flight duration
+* Number of stops
+
+The model transforms the selected inputs into the features required for prediction and generates an estimated flight fare.
+
+### Features Used
 
 * Airline
 * Source
 * Destination
-* Journey date
-* Departure time
+* Journey Day
+* Journey Month
+* Departure Hour
+* Departure Minute
 * Duration
-* Number of stops
+* Number of Stops
 
-The trained regression model then generates an **estimated flight fare**.
+The regression pipeline uses categorical encoding and a **Random Forest Regressor**.
 
-### Customer Satisfaction Prediction
+---
 
-Users can provide passenger and flight information, including:
+## 😊 Customer Satisfaction Prediction
 
-* Demographics
-* Travel type
+The customer satisfaction module uses passenger and flight information to predict whether a passenger is likely to be satisfied.
+
+### Features
+
+* Gender
+* Customer Type
+* Age
+* Type of Travel
 * Class
-* Flight distance
-* Service ratings
-* Departure delay
-* Arrival delay
+* Flight Distance
+* Service Ratings
+* Departure Delay
+* Arrival Delay
 
-The classification model returns the predicted satisfaction class and, where supported, prediction confidence.
+The classification pipeline uses categorical encoding and a **Random Forest Classifier** with class balancing.
+
+The application can also display prediction confidence when probability estimates are available.
 
 ---
 
 ## 📈 MLflow Experiment Tracking
 
-MLflow is used to track:
+MLflow is used to track machine learning experiments and model artifacts.
 
-* Model parameters
+Tracked information includes:
+
+* Model type
+* Project name
 * Evaluation metrics
-* Experiments
 * Model artifacts
 
-This provides a reproducible way to monitor and compare machine learning experiments.
+The project creates separate MLflow runs for:
 
-Run the MLflow interface with:
+* Flight Price Prediction
+* Customer Satisfaction Prediction
+
+Start the MLflow interface with:
 
 ```bash
 mlflow ui
 ```
+
+---
+
+## 🧠 Feature Engineering & Preprocessing
+
+### Flight Price Model
+
+The flight dataset is transformed using:
+
+* Journey date parsing
+* Journey day extraction
+* Journey month extraction
+* Departure hour extraction
+* Departure minute extraction
+* Flight duration conversion to minutes
+* Number-of-stops conversion to numerical representation
+* Categorical encoding using OneHotEncoder
+
+The preprocessing and model are combined into a Scikit-learn **Pipeline**.
+
+### Customer Satisfaction Model
+
+The customer dataset is processed by:
+
+* Removing duplicate records
+* Separating the target variable
+* Removing identifier columns where applicable
+* Automatically identifying categorical features
+* Automatically identifying numerical features
+* One-hot encoding categorical variables
+
+The preprocessing and classifier are combined into a Scikit-learn **Pipeline**.
+
+---
+
+## 📅 Historical Data & Future Dates
+
+The flight-price model is trained using historical flight data. It does **not** connect to a live airline booking system.
+
+Therefore, a future journey date can be supplied to the application even when that exact date does not exist in the historical dataset.
+
+The model uses learned historical patterns to generate an estimated fare.
+
+```text
+Historical Flight Data
+        ↓
+Airline + Route + Timing + Duration + Stops
+        ↓
+Feature Engineering
+        ↓
+Random Forest Model
+        ↓
+Estimated Flight Fare
+```
+
+> The resulting fare should be interpreted as a **machine-learning estimate**, not a live airline price.
 
 ---
 
@@ -187,12 +337,13 @@ Flights/
 ├── .gitignore
 │
 └── assets/
-    ├── flight-price-prediction.png
-    ├── customer-satisfaction.png
-    └── mlflow-dashboard.png
+    ├── home-dashboard.png
+    ├── flight-search.png
+    ├── price-prediction.png
+    └── customer-satisfaction.png
 ```
 
-> The `assets/` folder is optional and can be added when screenshots are available.
+> Keep the project structure in this README synchronized with the actual files in the repository.
 
 ---
 
@@ -211,13 +362,21 @@ cd Flights
 python -m venv venv
 ```
 
-Activate it on Windows:
+### 3. Activate the environment
+
+**Windows:**
 
 ```bash
 venv\Scripts\activate
 ```
 
-### 3. Install dependencies
+**macOS / Linux:**
+
+```bash
+source venv/bin/activate
+```
+
+### 4. Install dependencies
 
 ```bash
 pip install -r requirements.txt
@@ -225,108 +384,63 @@ pip install -r requirements.txt
 
 ---
 
-## ▶️ Run the Application
-
-Start the Streamlit application:
-
-```bash
-streamlit run app.py
-```
-
-The application will open in your browser.
-
----
-
-
-## 🖥️ Application Screenshots
-
-### 🏠 SkyPredict AI Dashboard
-
-The main dashboard provides an overview of the flight dataset, including flight volume, airlines, routes, and average fare.
-
-<img width="2848" height="1537" alt="home-dashboard1" src="https://github.com/user-attachments/assets/32a28a37-9e85-4393-8610-571b7ab14dbd" />
-
----
-
-### ✈️ Flight Search & Route Analysis
-
-Users can select the origin, destination, journey date, and travel class to explore matching historical flight patterns.
-
-<img width="2819" height="1498" alt="Screenshot 2026-08-15 210441" src="https://github.com/user-attachments/assets/de555f45-ea53-439e-b827-1cba96551ba2" />
-
----
-
-### 💰 AI Flight Price Prediction
-
-The application generates an estimated ticket price and provides contextual analysis against the historical route average.
-
-<img width="2823" height="1406" alt="Screenshot 2026-08-15 210509" src="https://github.com/user-attachments/assets/981451a2-de1f-49be-9dfd-da31b63daf2e" />
-
-**Example:** For the selected Bangalore → Delhi route, the model generated an estimated fare of **₹4,105**, compared with a historical route average of **₹5,144**.
-
-> This is a machine-learning estimate based on historical data and is not a live airline fare.
-
----
-
-### 😊 Customer Satisfaction Prediction
-
-Users can enter passenger information, flight details, service ratings, and delays to generate a customer satisfaction prediction.
-
-<img width="2833" height="1521" alt="Screenshot 2026-08-15 210546" src="https://github.com/user-attachments/assets/3980714a-aabc-4820-a06c-c438e89c5296" />
-
-**Example:** The displayed prediction classified the passenger as **Satisfied** with **72.0% confidence**.
-
-
 ## 🧠 Train the Models
 
-To retrain the machine learning models:
+Run:
 
 ```bash
 python train_models.py
 ```
 
-The training process performs preprocessing, model training, evaluation, and MLflow experiment tracking.
+The training script:
+
+1. Loads the cleaned datasets
+2. Performs preprocessing
+3. Engineers model features
+4. Splits the data into training and testing sets
+5. Trains the Random Forest models
+6. Evaluates model performance
+7. Saves the trained models
+8. Logs experiments to MLflow when available
 
 ---
 
-## 📅 Historical Data and Future Dates
+## ▶️ Run the Streamlit Application
 
-The flight-price model is trained using historical flight data. It does **not** connect to a live airline booking system.
+Start the application with:
 
-Therefore, a future journey date can be used as an input for generating an estimated fare based on learned historical patterns.
-
-For example:
-
-```text
-Historical flight characteristics
-        ↓
-Airline + Route + Time + Duration + Stops
-        ↓
-Machine Learning Model
-        ↓
-Estimated Flight Fare
+```bash
+streamlit run app.py
 ```
 
-The resulting value should be interpreted as a **model-generated estimate**, not a live market price.
+The Streamlit interface provides navigation between:
+
+* 🏠 Home
+* ✈️ Flight Price Prediction
+* 📊 Dashboard
+* 😊 Customer Satisfaction
+* ℹ️ About
 
 ---
 
 ## 🔍 Key Machine Learning Concepts Demonstrated
 
-* Data preprocessing
+* Data cleaning
 * Exploratory data analysis
 * Feature engineering
 * Categorical encoding
+* Numerical feature processing
 * Regression
 * Classification
 * Random Forest
+* Train/test splitting
 * Model evaluation
-* Prediction probabilities
+* Prediction confidence
+* Scikit-learn Pipelines
 * Model serialization
-* ML pipelines
-* Experiment tracking
+* MLflow experiment tracking
 * Interactive dashboards
-* Machine learning deployment
+* Streamlit deployment
 
 ---
 
@@ -335,31 +449,33 @@ The resulting value should be interpreted as a **model-generated estimate**, not
 Potential enhancements include:
 
 * Hyperparameter optimization
-* Model comparison using multiple algorithms
 * Cross-validation
+* Comparison with XGBoost and LightGBM
 * Feature importance analysis
 * SHAP-based model explainability
-* Real-time airline pricing API integration
-* Cloud deployment
 * Automated model retraining
-* CI/CD for model deployment
+* Cloud deployment
+* CI/CD integration
+* Real-time airline pricing API integration
+* Monitoring model drift and prediction performance
 
 ---
 
 ## 📌 Disclaimer
 
-This project is intended for educational and portfolio purposes.
+This project is intended for **educational and portfolio purposes**.
 
-Flight price predictions are generated from historical data and should not be considered live airline prices or guaranteed booking prices.
+Flight price predictions are generated from historical data and should not be interpreted as live airline prices, guaranteed booking prices, or real-time market quotes.
 
 ---
 
 ## 👩‍💻 Author
 
-**Ankita Taneja**
+### Ankita Taneja
 
-Data Analyst | Machine Learning | Business Analytics
+**Data Analyst | Machine Learning | Business Analytics**
 
-GitHub: https://github.com/Ankitatan
+* GitHub: https://github.com/Ankitatan
+* LinkedIn: https://www.linkedin.com/in/ankita-taneja-390613396/
 
-LinkedIn: https://www.linkedin.com/in/ankita-taneja-390613396/
+---
