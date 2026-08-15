@@ -245,7 +245,6 @@ The application will open in your browser.
 The main dashboard provides an overview of the flight dataset, including flight volume, airlines, routes, and average fare.
 
 <img width="2848" height="1537" alt="home-dashboard1" src="https://github.com/user-attachments/assets/32a28a37-9e85-4393-8610-571b7ab14dbd" />
-" alt="SkyPredict AI Dashboard" width="900">
 
 ---
 
