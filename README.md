@@ -198,6 +198,13 @@ Flights/
 
 ---
 
+## 🖥️ Application Screenshots
+
+<p align="center"> <img src="assets/home-dashboard1.png" alt="SkyPredict AI Dashboard" width="900"> </p>
+<p align="center"> <img src="assets/home-dashboard2.png" alt="SkyPredict AI Dashboard" width="900"> </p>
+<p align="center"> <img src="assets/home-dashboard3.png" alt="SkyPredict AI Dashboard" width="900"> </p>
+<p align="center"> <img src="assets/home-dashboard4.png" alt="SkyPredict AI Dashboard" width="900"> </p>
+
 ## ⚙️ Installation
 
 ### 1. Clone the repository
