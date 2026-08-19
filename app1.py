@@ -4,7 +4,7 @@ import re
 import base64
 import mimetypes
 import html
-from datetime import datetime
+from datetime import datetime, time
 from pathlib import Path
 
 import joblib
@@ -1084,7 +1084,6 @@ def calculate_route_distance(origin, destination):
 
 
 
-
 # ============================================================
 # CUSTOMER MODEL INPUT HELPERS
 # ============================================================
@@ -1703,6 +1702,7 @@ with st.sidebar:
     PAGE_PREDICTION = "✈ Flight Price Prediction"
     PAGE_DASHBOARD = "📊 Dashboard"
     PAGE_SATISFACTION = "😊 Customer Satisfaction"
+    PAGE_DATABASE = "🗄️ Database" 
     PAGE_ABOUT = "ℹ About"
 
     # ------------------------------------------------------------
@@ -1733,6 +1733,7 @@ with st.sidebar:
             PAGE_PREDICTION: "prediction",
             PAGE_DASHBOARD: "dashboard",
             PAGE_SATISFACTION: "satisfaction",
+            PAGE_DATABASE: "database",  
             PAGE_ABOUT: "about",
         }
         st.query_params["page"] = page_map[target]
@@ -1750,6 +1751,9 @@ with st.sidebar:
     if st.button(PAGE_SATISFACTION, key="nav_satisfaction", use_container_width=True):
         navigate_to(PAGE_SATISFACTION)
 
+    if st.button(PAGE_DATABASE, key="nav_database", use_container_width=True):
+        navigate_to(PAGE_DATABASE)
+        
     if st.button(PAGE_ABOUT, key="nav_about", use_container_width=True):
         navigate_to(PAGE_ABOUT)
 
@@ -1765,6 +1769,7 @@ page_lookup = {
     "prediction": PAGE_PREDICTION,
     "dashboard": PAGE_DASHBOARD,
     "satisfaction": PAGE_SATISFACTION,
+    "database": PAGE_DATABASE,
     "about": PAGE_ABOUT,
 }
 page = page_lookup.get(
@@ -1947,13 +1952,13 @@ if page == "🏠 Home":
         col3, col4 = st.columns(2)
 
         with col3:
-
-            journey_date = st.date_input(
-                "📅 Journey Date",
-                value=datetime.today().date(),
-                key="home_journey_date",
-            )
-
+                journey_date = st.date_input(
+                    "📅 Journey Date",
+                    value=datetime.today().date(),
+                    min_value=datetime.today().date(),
+                    key="home_journey_date",
+                )
+            
         with col4:
 
             class_options = (
@@ -2193,518 +2198,205 @@ if page == "🏠 Home":
 # FLIGHT PRICE PREDICTION
 # ============================================================
 
+# ============================================================
+# FLIGHT PRICE PREDICTION
+# ============================================================
+
 elif page == "✈ Flight Price Prediction":
 
     st.markdown(
-        '<div class="main-title">'
-        '✈️ Flight Price Prediction'
-        '</div>',
+        '<div class="main-title">✈️ Flight Price Prediction</div>',
         unsafe_allow_html=True,
     )
 
     st.markdown(
-        '<div class="subtitle">'
-        'Machine Learning based ticket price prediction.'
-        '</div>',
+        '<div class="subtitle">Customize flight features to predict ticket fare in real time.</div>',
         unsafe_allow_html=True,
     )
 
     # --------------------------------------------------------
     # Check whether a flight was selected from Home
     # --------------------------------------------------------
-
-    if (
-        "selected_flight"
-        not in st.session_state
-    ):
-
-        st.info(
-            "Search for a flight on the Home page "
-            "and click Predict Price."
-        )
-
-        if st.button(
-            "🏠 Go to Home",
-            type="primary",
-            use_container_width=True,
-        ):
-
-            st.session_state[
-                "current_page"
-            ] = PAGE_HOME
-
-            st.query_params[
-                "page"
-            ] = "home"
-
+    if "selected_flight" not in st.session_state:
+        st.info("Search for a flight on the Home page and click Predict Price.")
+        if st.button("🏠 Go to Home", type="primary", use_container_width=True):
+            st.session_state["current_page"] = PAGE_HOME
+            st.query_params["page"] = "home"
             st.rerun()
-
     else:
+        # 1. Retrieve initial selected flight defaults
+        flight = st.session_state.get("selected_flight", {})
+        saved_date = st.session_state.get("selected_journey_date")
+        
+        today_date = datetime.today().date()
+        default_date = pd.to_datetime(saved_date).date() if saved_date else today_date
+        if default_date < today_date:
+            default_date = today_date
+
+        # Dropdown options from dataset
+        airline_options = safe_unique(flight_df, "Airline") or ["IndiGo", "Air India", "Jet Airways", "SpiceJet"]
+        source_options = safe_unique(flight_df, "Source") or ["Delhi", "Mumbai", "Bangalore", "Kolkata", "Chennai"]
+        dest_options = safe_unique(flight_df, "Destination") or ["Cochin", "Delhi", "Bangalore", "Hyderabad", "Kolkata"]
+
+        default_airline = str(flight.get("Airline", airline_options[0]))
+        default_source = str(flight.get("Source", source_options[0]))
+        default_dest = str(flight.get("Destination", dest_options[0]))
+
+        parsed_dur = duration_to_minutes(flight.get("Duration", "2h 30m"))
+        default_dur_h = int(parsed_dur // 60)
+        default_dur_m = int(parsed_dur % 60)
+        default_stops = stops_to_number(flight.get("Total_Stops", 0))
+
+        dep_raw = str(flight.get("Dep_Time", "09:00")).strip()
+        try:
+            t_split = dep_raw.split(":")
+            default_time = time(int(t_split[0]), int(t_split[1]))
+        except Exception:
+            default_time = time(9, 0)
 
         # ----------------------------------------------------
-        # Retrieve selected flight
+        # 2. Interactive Feature Controls
         # ----------------------------------------------------
+        st.subheader("🛠️ Flight Parameter Controls")
 
-        flight = st.session_state[
-            "selected_flight"
-        ]
+        flight_id = f"{flight.get('Airline', '')}_{flight.get('Source', '')}_{flight.get('Destination', '')}_{flight.get('Dep_Time', '')}"
 
-        journey_date = st.session_state.get(
-            "selected_journey_date",
-            datetime.today().date(),
-        )
+        with st.container(border=True):
+            c1, c2, c3 = st.columns(3)
 
-        journey_date = pd.to_datetime(
-            journey_date
-        ).date()
-
-        # ----------------------------------------------------
-        # Flight details
-        # ----------------------------------------------------
-
-        airline = str(
-            flight.get(
-                "Airline",
-                "Unknown Airline",
-            )
-        )
-
-        source = str(
-            flight.get(
-                "Source",
-                "",
-            )
-        )
-
-        destination = str(
-            flight.get(
-                "Destination",
-                "",
-            )
-        )
-
-        departure = str(
-            flight.get(
-                "Dep_Time",
-                flight.get(
-                    "Departure_Time",
-                    "--",
+            with c1:
+                airline_input = st.selectbox(
+                    "🏢 Airline",
+                    airline_options,
+                    index=airline_options.index(default_airline) if default_airline in airline_options else 0,
+                    key=f"pred_airline_{flight_id}",
                 )
-            )
-        )
+                source_input = st.selectbox(
+                    "🛫 Source / Origin",
+                    source_options,
+                    index=source_options.index(default_source) if default_source in source_options else 0,
+                    key=f"pred_source_{flight_id}",
+                )
 
-        arrival = str(
-            flight.get(
-                "Arrival_Time",
-                "--",
-            )
-        )
+            with c2:
+                destination_input = st.selectbox(
+                    "🛬 Destination",
+                    dest_options,
+                    index=dest_options.index(default_dest) if default_dest in dest_options else 0,
+                    key=f"pred_destination_{flight_id}",
+                )
+                journey_date_input = st.date_input(
+                    "📅 Journey Date",
+                    value=default_date,
+                    min_value=today_date,
+                    key=f"pred_journey_date_{flight_id}",
+                )
 
-        duration = flight.get(
-            "Duration",
-            "0h 0m",
-        )
+            with c3:
+                departure_time_input = st.time_input(
+                    "⏰ Departure Time",
+                    value=default_time,
+                    key=f"pred_dep_time_{flight_id}",
+                )
+                stops_input = st.selectbox(
+                    "🛑 Total Stops",
+                    options=[0, 1, 2, 3, 4],
+                    format_func=format_stops,
+                    index=min(default_stops, 4),
+                    key=f"pred_stops_{flight_id}",
+                )
 
-        stops = flight.get(
-            "Total_Stops",
-            flight.get(
-                "Total_Stops_Number",
-                0,
-            ),
-        )
+            d_col1, d_col2 = st.columns(2)
+            with d_col1:
+                dur_hours = st.slider("⏱️ Flight Duration (Hours)", min_value=0, max_value=40, value=default_dur_h, key=f"pred_dur_h_{flight_id}")
+            with d_col2:
+                dur_minutes = st.slider("Flight Duration (Minutes)", min_value=0, max_value=55, value=default_dur_m, step=5, key=f"pred_dur_m_{flight_id}")
 
-        # ----------------------------------------------------
-        # Selected flight card
-        # ----------------------------------------------------
-
-        st.success(
-            f"Selected flight loaded: "
-            f"{airline} | "
-            f"{source} → {destination} | "
-            f"{journey_date.strftime('%d %B %Y')}"
-        )
-
-        with st.container(
-            border=True
-        ):
-
-            st.markdown(
-                f"### ✈️ {airline}"
-            )
-
-            st.markdown(
-                f"## {source} → {destination}"
-            )
-
-            d1, d2, d3, d4 = st.columns(4)
-
-            d1.metric(
-                "Departure",
-                departure,
-            )
-
-            d2.metric(
-                "Arrival",
-                arrival,
-            )
-
-            d3.metric(
-                "Duration",
-                str(duration),
-            )
-
-            d4.metric(
-                "Stops",
-                format_stops(stops),
-            )
+        duration_str = f"{dur_hours}h {dur_minutes}m"
+        duration_minutes = dur_hours * 60 + dur_minutes
 
         # ----------------------------------------------------
-        # Route validation
+        # 3. Model Prediction Execution
         # ----------------------------------------------------
-
-        if (
-            source.strip().lower()
-            ==
-            destination.strip().lower()
-        ):
-
-            st.error(
-                "❌ Source and destination cannot be the same."
-            )
-
+        if source_input.strip().lower() == destination_input.strip().lower():
+            st.error("❌ Source and destination cannot be the same.")
+        elif flight_model is None:
+            st.error("Flight price model was not found. Check models/flight_price_model.pkl.")
         else:
-
-            # ------------------------------------------------
-            # Automatically calculated features
-            # ------------------------------------------------
-
-            duration_minutes = (
-                duration_to_minutes(
-                    duration
-                )
-            )
-
-            journey_timestamp = pd.Timestamp(
-                journey_date
-            )
-
-            # Departure time
-            dep_time = str(
-                departure
-            ).strip()
-
-            dep_hour = 0
-            dep_minute = 0
-
-            try:
-
-                parts = dep_time.split(":")
-
-                if len(parts) >= 2:
-
-                    dep_hour = int(
-                        parts[0]
-                    )
-
-                    dep_minute = int(
-                        parts[1]
-                    )
-
-            except Exception:
-
-                pass
-
-            st.subheader(
-                "⚙️ Automatically Generated Features"
-            )
-
-            ec1, ec2, ec3, ec4, ec5 = st.columns(5)
-
-            ec1.metric(
-                "Journey Day",
-                journey_timestamp.day,
-            )
-
-            ec2.metric(
-                "Journey Month",
-                journey_timestamp.month,
-            )
-
-            ec3.metric(
-                "Departure Hour",
-                dep_hour,
-            )
-
-            ec4.metric(
-                "Departure Minute",
-                dep_minute,
-            )
-
-            ec5.metric(
-                "Duration",
-                f"{duration_minutes} min",
-            )
-
-            st.caption(
-                f"Stops: {format_stops(stops)}"
-            )
-
-            # ------------------------------------------------
-            # MODEL AVAILABILITY + SAFE PREDICTION
-            # ------------------------------------------------
-            # These defaults are intentionally created BEFORE prediction.
-            # If sklearn raises an exception, the analysis section must not
-            # reference an undefined variable such as `level` or `prediction`.
             prediction = None
             level = "⚪ Prediction unavailable"
             prediction_success = False
 
-            if flight_model is None:
+            try:
+                updated_flight_payload = {
+                    "Airline": airline_input,
+                    "Source": source_input,
+                    "Destination": destination_input,
+                    "Dep_Time": departure_time_input.strftime("%H:%M"),
+                    "Arrival_Time": "--",
+                    "Duration": duration_str,
+                    "Total_Stops": stops_input,
+                }
 
-                st.error(
-                    "Flight price model was not found. "
-                    "Check models/flight_price_model.pkl."
+                model_input_features = get_flight_model_input_columns(
+                    flight_model,
+                    flight_features,
                 )
 
-            else:
+                if not model_input_features:
+                    raise ValueError("Could not determine the trained flight model input columns.")
 
-                try:
+                prediction_input = build_flight_prediction_input(
+                    flight=updated_flight_payload,
+                    journey_date=journey_date_input,
+                    features=model_input_features,
+                    model=flight_model,
+                    dataset=flight_df,
+                )
 
-                    # ------------------------------------------------
-                    # BUILD MODEL INPUT FROM THE FITTED MODEL SCHEMA
-                    # ------------------------------------------------
-                    # IMPORTANT:
-                    # Do NOT blindly force flight_features.pkl here.
-                    # A saved Pipeline + ColumnTransformer expects the same
-                    # raw DataFrame columns that it saw during training.
-                    # get_flight_model_input_columns() checks the fitted model
-                    # first and only falls back to flight_features.pkl when
-                    # the model itself does not expose feature_names_in_.
-                    # ------------------------------------------------
-                    model_input_features = get_flight_model_input_columns(
-                        flight_model,
-                        flight_features,
-                    )
+                prediction_result = flight_model.predict(prediction_input)
+                if prediction_result is None or len(prediction_result) == 0:
+                    raise ValueError("The flight-price model returned no prediction.")
 
-                    if not model_input_features:
-                        raise ValueError(
-                            "Could not determine the trained flight model "
-                            "input columns. Check flight_features.pkl or "
-                            "re-save the fitted model with DataFrame column names."
-                        )
+                prediction = max(0.0, float(prediction_result[0]))
 
-                    prediction_input = build_flight_prediction_input(
-                        flight=flight,
-                        journey_date=journey_date,
-                        features=model_input_features,
-                        model=flight_model,
-                        dataset=flight_df,
-                    )
+                if prediction < 4000:
+                    level = "🟢 Budget Fare"
+                elif prediction < 8000:
+                    level = "🟡 Average Fare"
+                else:
+                    level = "🔴 Premium Fare"
 
-                    # ------------------------------------------------
-                    # MODEL INPUT VALIDATION
-                    # ------------------------------------------------
-                    # This diagnostic is useful while validating the local
-                    # .pkl file. It also makes schema problems visible in the
-                    # UI instead of hiding them behind a generic sklearn error.
-                    with st.expander(
-                        "🔧 Flight Model Input Validation",
-                        expanded=False,
-                    ):
+                prediction_success = True
 
-                        st.write(
-                            "**Model input columns:**",
-                            prediction_input.columns.tolist(),
-                        )
+                # Main Price Card
+                st.markdown(
+                    f"""
+                    <div class="result-card">
+                        <div class="result-label">🤖 AI Predicted Ticket Price</div>
+                        <div class="result-price">₹ {prediction:,.0f}</div>
+                        <div class="result-label">{level}</div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
 
-                        st.write(
-                            "**Input shape:**",
-                            prediction_input.shape,
-                        )
+            except Exception as exc:
+                st.error("Prediction could not be generated.")
+                st.exception(exc)
 
-                        st.write(
-                            "**Data types:**",
-                            prediction_input.dtypes.astype(str).to_dict(),
-                        )
-
-                        st.dataframe(
-                            prediction_input,
-                            use_container_width=True,
-                            hide_index=True,
-                        )
-
-                    # ------------------------------------------------
-                    # SAVED MODEL STRUCTURE
-                    # ------------------------------------------------
-                    with st.expander(
-                        "🔍 Saved Model Structure",
-                        expanded=False,
-                    ):
-
-                        st.write(
-                            "Model type:",
-                            type(flight_model).__name__,
-                        )
-
-                        if hasattr(flight_model, "feature_names_in_"):
-                            try:
-                                st.write(
-                                    "Model feature_names_in_:",
-                                    list(flight_model.feature_names_in_),
-                                )
-                            except Exception:
-                                pass
-
-                        if hasattr(flight_model, "named_steps"):
-
-                            st.write(
-                                "Pipeline steps:",
-                                list(flight_model.named_steps.keys()),
-                            )
-
-                            for step_name, step in (
-                                flight_model.named_steps.items()
-                            ):
-
-                                st.write(
-                                    f"**Step: {step_name}**"
-                                )
-
-                                st.write(
-                                    "Type:",
-                                    type(step).__name__,
-                                )
-
-                                if hasattr(step, "feature_names_in_"):
-                                    try:
-                                        st.write(
-                                            "feature_names_in_:",
-                                            list(step.feature_names_in_),
-                                        )
-                                    except Exception:
-                                        pass
-
-                                if hasattr(step, "transformers_"):
-                                    st.write(
-                                        "Fitted transformers:",
-                                        step.transformers_,
-                                    )
-
-                    # ------------------------------------------------
-                    # RUN THE TRAINED MODEL
-                    # ------------------------------------------------
-                    prediction_result = flight_model.predict(
-                        prediction_input
-                    )
-
-                    if prediction_result is None or len(prediction_result) == 0:
-                        raise ValueError(
-                            "The flight-price model returned no prediction."
-                        )
-
-                    prediction = float(prediction_result[0])
-
-                    # A ticket price cannot logically be negative.
-                    prediction = max(0.0, prediction)
-
-                    # ------------------------------------------------
-                    # FARE CATEGORY
-                    # ------------------------------------------------
-                    if prediction < 4000:
-                        level = "🟢 Budget Fare"
-                    elif prediction < 8000:
-                        level = "🟡 Average Fare"
-                    else:
-                        level = "🔴 Premium Fare"
-
-                    prediction_success = True
-
-                    # ------------------------------------------------
-                    # MAIN PRICE RESULT
-                    # ------------------------------------------------
-                    st.success(
-                        "Flight price prediction generated successfully."
-                    )
-
-                    st.markdown(
-                        f"""
-                        <div class="result-card">
-                            <div class="result-label">
-                                🤖 AI Predicted Ticket Price
-                            </div>
-                            <div class="result-price">
-                                ₹ {prediction:,.0f}
-                            </div>
-                            <div class="result-label">
-                                {level}
-                            </div>
-                        </div>
-                        """,
-                        unsafe_allow_html=True,
-                    )
-
-                    # ------------------------------------------------
-                    # PREDICTION SUMMARY
-                    # ------------------------------------------------
-                    r1, r2, r3 = st.columns(3)
-
-                    r1.metric(
-                        "Airline",
-                        airline,
-                    )
-
-                    r2.metric(
-                        "Route",
-                        f"{source} → {destination}",
-                    )
-
-                    r3.metric(
-                        "Journey Date",
-                        journey_date.strftime("%d %b %Y"),
-                    )
-
-                except Exception as exc:
-
-                    # Do not allow the exception to terminate the page.
-                    # The analysis section below checks prediction_success
-                    # before using prediction/level.
-                    prediction = None
-                    level = "⚪ Prediction unavailable"
-                    prediction_success = False
-
-                    st.error(
-                        "Prediction could not be generated."
-                    )
-
-                    st.warning(
-                        "The saved model and the DataFrame supplied by the "
-                        "application do not currently have a compatible input "
-                        "schema. The application has kept the error contained "
-                        "so the rest of the page can still render."
-                    )
-
-                    st.exception(exc)
-
-            # --------------------------------------------------------
-            # AI PRICE ANALYSIS
-            # --------------------------------------------------------
-            # Compare the model prediction with the historical average
-            # for the same route when historical price data is available.
-            # The historical average is only a reference benchmark; it is
-            # NOT presented as a live airfare quote.
+            # ----------------------------------------------------
+            # 4. AI Price Analysis & Benchmarks
+            # ----------------------------------------------------
             st.subheader("📈 AI Price Analysis")
-
-            analysis_cols = st.columns(4)
 
             route_history = pd.DataFrame()
             if {"Source", "Destination", "Price"}.issubset(flight_df.columns):
                 route_history = flight_df[
-                    flight_df["Source"].astype(str).str.strip().str.lower().eq(source.strip().lower())
-                    & flight_df["Destination"].astype(str).str.strip().str.lower().eq(destination.strip().lower())
+                    flight_df["Source"].astype(str).str.strip().str.lower().eq(source_input.strip().lower())
+                    & flight_df["Destination"].astype(str).str.strip().str.lower().eq(destination_input.strip().lower())
                 ].copy()
-                route_history["Price"] = pd.to_numeric(
-                    route_history["Price"], errors="coerce"
-                )
+                route_history["Price"] = pd.to_numeric(route_history["Price"], errors="coerce")
                 route_history = route_history.dropna(subset=["Price"])
 
             historical_avg = (
@@ -2713,127 +2405,34 @@ elif page == "✈ Flight Price Prediction":
                 else None
             )
 
-            # --------------------------------------------------------
-            # SHOW AI PRICE ANALYSIS ONLY WHEN A PREDICTION EXISTS
-            # --------------------------------------------------------
             if prediction_success and prediction is not None:
-
+                analysis_cols = st.columns(4)
                 with analysis_cols[0]:
-                    st.metric(
-                        "AI Fare Category",
-                        level,
-                    )
-
+                    st.metric("AI Fare Category", level)
                 with analysis_cols[1]:
-                    st.metric(
-                        "Trip Duration",
-                        f"{duration_minutes} min",
-                    )
-
+                    st.metric("Trip Duration", f"{duration_minutes} min")
                 with analysis_cols[2]:
-                    st.metric(
-                        "Stops",
-                        format_stops(stops),
-                    )
-
+                    st.metric("Stops", format_stops(stops_input))
                 with analysis_cols[3]:
                     if historical_avg is not None and historical_avg > 0:
-                        difference_pct = (
-                            (prediction - historical_avg)
-                            / historical_avg
-                            * 100
-                        )
-                        st.metric(
-                            "vs Route Avg.",
-                            f"{difference_pct:+.1f}%",
-                        )
+                        diff_pct = ((prediction - historical_avg) / historical_avg) * 100
+                        st.metric("vs Route Avg.", f"{diff_pct:+.1f}%")
                     else:
-                        st.metric(
-                            "Route History",
-                            "No benchmark",
-                        )
+                        st.metric("Route History", "No benchmark")
 
-                if historical_avg is not None and historical_avg > 0:
-
-                    difference = prediction - historical_avg
-                    difference_pct = (
-                        difference
-                        / historical_avg
-                        * 100
-                    )
-
-                    if difference > 0:
-                        comparison_text = (
-                            f"The AI prediction of **₹{prediction:,.0f}** is "
-                            f"**₹{difference:,.0f} ({difference_pct:+.1f}%) above** "
-                            f"the historical average of **₹{historical_avg:,.0f}** "
-                            f"for **{source} → {destination}**."
-                        )
-
-                    elif difference < 0:
-                        comparison_text = (
-                            f"The AI prediction of **₹{prediction:,.0f}** is "
-                            f"**₹{abs(difference):,.0f} ({difference_pct:+.1f}%) below** "
-                            f"the historical average of **₹{historical_avg:,.0f}** "
-                            f"for **{source} → {destination}**."
-                        )
-
-                    else:
-                        comparison_text = (
-                            f"The AI prediction of **₹{prediction:,.0f}** is "
-                            f"approximately equal to the historical route "
-                            f"average of **₹{historical_avg:,.0f}**."
-                        )
-
-                    st.info(comparison_text)
-
-                    st.caption(
-                        f"Reference: {len(route_history):,} historical flight "
-                        "record(s) for this route. This is a historical "
-                        "benchmark, not a live airfare quote."
-                    )
-
-                else:
-
-                    st.info(
-                        "No historical price benchmark is available for this "
-                        "route. The displayed fare is the trained model's "
-                        "prediction based on the selected flight features."
-                    )
-
-                # --------------------------------------------------------
-                # PREDICTION INTERPRETATION
-                # --------------------------------------------------------
                 st.markdown("### 🧠 Prediction Interpretation")
-
                 interpretation = [
-                    f"**Route:** {source} → {destination}",
-                    f"**Airline:** {airline}",
-                    f"**Journey date:** {journey_date.strftime('%d %B %Y')}",
-                    f"**Departure:** {departure}",
-                    f"**Duration:** {duration}",
-                    f"**Stops:** {format_stops(stops)}",
+                    f"**Route:** {source_input} → {destination_input}",
+                    f"**Airline:** {airline_input}",
+                    f"**Journey date:** {journey_date_input.strftime('%d %B %Y')}",
+                    f"**Departure:** {departure_time_input.strftime('%H:%M')}",
+                    f"**Duration:** {duration_str}",
+                    f"**Stops:** {format_stops(stops_input)}",
                     f"**Predicted fare:** ₹{prediction:,.0f}",
                     f"**Fare category:** {level}",
                 ]
+                st.markdown("\n".join(f"- {item}" for item in interpretation))
 
-                st.markdown(
-                    "\n".join(
-                        f"- {item}"
-                        for item in interpretation
-                    )
-                )
-
-            else:
-
-                # The model failed, so do not calculate percentages or format
-                # a missing prediction as a real fare. This is what prevents
-                # the previous NameError: name 'level' is not defined.
-                st.info(
-                    "AI price analysis is unavailable because a valid model "
-                    "prediction could not be generated. Review the model-input "
-                    "diagnostic above."
-                )
 
 # ============================================================
 # DASHBOARD
@@ -3999,6 +3598,75 @@ elif page == PAGE_SATISFACTION:
                 fig,
                 use_container_width=True,
             )
+
+# ============================================================
+# DATABASE VIEWER
+# ============================================================
+
+elif page == "🗄️ Database":
+
+    st.markdown(
+        '<div class="main-title">🗄️ Database & Dataset Explorer</div>',
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        '<div class="subtitle">Inspect, filter, and export historical flight and passenger records.</div>',
+        unsafe_allow_html=True,
+    )
+
+    dataset_choice = st.radio(
+        "Select Dataset to View:",
+        ["✈️ Flight Price Dataset", "😊 Passenger Satisfaction Dataset"],
+        horizontal=True,
+    )
+
+    if dataset_choice == "✈️ Flight Price Dataset":
+        target_df = flight_df.copy()
+        file_name = "Flight_Price.csv"
+    else:
+        target_df = customer_df.copy()
+        file_name = "Passenger_Satisfaction.csv"
+
+    if target_df.empty:
+        st.warning(f"No records found for {file_name}.")
+    else:
+        # Dataset KPIs
+        k1, k2, k3, k4 = st.columns(4)
+        k1.metric("Total Rows", f"{len(target_df):,}")
+        k2.metric("Total Columns", len(target_df.columns))
+        k3.metric("Missing Values", f"{target_df.isna().sum().sum():,}")
+        k4.metric("Memory Usage", f"{target_df.memory_usage(deep=True).sum() / (1024 * 1024):.2f} MB")
+
+        st.divider()
+
+        # Filtering & Search Controls
+        f1, f2 = st.columns([3, 1])
+        with f1:
+            search_query = st.text_input("🔍 Search any text across dataset:", placeholder="e.g. IndiGo, Delhi, Business...")
+        with f2:
+            row_limit = st.selectbox("Display limit", [50, 100, 250, 500, "All"], index=1)
+
+        display_df = target_df
+        if search_query:
+            mask = display_df.astype(str).apply(lambda row: row.str.contains(search_query, case=False, na=False)).any(axis=1)
+            display_df = display_df[mask]
+
+        if row_limit != "All":
+            display_df = display_df.head(int(row_limit))
+
+        # Render Table
+        st.dataframe(display_df, use_container_width=True, hide_index=True)
+
+        # Download Button
+        csv_data = target_df.to_csv(index=False).encode("utf-8")
+        st.download_button(
+            label=f"📥 Download Full {file_name}",
+            data=csv_data,
+            file_name=file_name,
+            mime="text/csv",
+            type="primary",
+        )
+
 
 # ============================================================
 # ABOUT
